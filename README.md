@@ -2,7 +2,7 @@
 
 Learning React Native Reanimated 2 Animations
 
-Version: 0.1.0 - 18 Mar 2022
+Version: 0.2.0 - 19 Mar 2022
 
 ## Description
 
