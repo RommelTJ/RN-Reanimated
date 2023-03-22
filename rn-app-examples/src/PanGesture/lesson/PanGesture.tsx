@@ -1,8 +1,13 @@
 import { View, StyleSheet } from "react-native";
 
-import { Card, Cards } from "../../components";
+import { Card, CARD_HEIGHT, CARD_WIDTH, Cards } from "../../components";
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withDecay
+} from "react-native-reanimated";
 
 const styles = StyleSheet.create({
   container: {
@@ -10,12 +15,14 @@ const styles = StyleSheet.create({
   },
 });
 
-// interface GestureProps {
-//   width: number;
-//   height: number;
-// }
+interface GestureProps {
+  width: number;
+  height: number;
+}
 
-export const PanGesture = () => {
+export const PanGesture = (props: GestureProps) => {
+  const { width, height } = props;
+
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -33,6 +40,10 @@ export const PanGesture = () => {
     onActive: (event, context) => {
       translateX.value = context.offsetX + event.translationX;
       translateY.value = context.offsetY + event.translationY;
+    },
+    onEnd: (event, context) => {
+      translateX.value = withDecay({ velocity: event.velocityX, clamp: [0, width - CARD_WIDTH]});
+      translateY.value = withDecay({ velocity: event.velocityY, clamp: [0, height - CARD_HEIGHT]});
     }
   });
 
