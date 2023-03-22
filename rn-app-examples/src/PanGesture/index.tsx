@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { LayoutRectangle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import { PanGesture as Gesture } from "./PanGesture";
+import { PanGesture as Gesture } from "./lesson/PanGesture";
 
 const styles = StyleSheet.create({
   container: {
