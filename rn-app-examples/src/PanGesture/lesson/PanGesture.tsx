@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withDecay
 } from "react-native-reanimated";
+import { clamp } from "react-native-redash";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +23,9 @@ interface GestureProps {
 
 export const PanGesture = (props: GestureProps) => {
   const { width, height } = props;
+
+  const boundX = width - CARD_WIDTH;
+  const boundY = height - CARD_HEIGHT;
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -38,12 +42,12 @@ export const PanGesture = (props: GestureProps) => {
       context.offsetY = translateY.value;
     },
     onActive: (event, context) => {
-      translateX.value = context.offsetX + event.translationX;
-      translateY.value = context.offsetY + event.translationY;
+      translateX.value = clamp(context.offsetX + event.translationX, 0, boundX);
+      translateY.value = clamp(context.offsetY + event.translationY, 0, boundY);
     },
-    onEnd: (event, context) => {
-      translateX.value = withDecay({ velocity: event.velocityX, clamp: [0, width - CARD_WIDTH]});
-      translateY.value = withDecay({ velocity: event.velocityY, clamp: [0, height - CARD_HEIGHT]});
+    onEnd: (event, _) => {
+      translateX.value = withDecay({ velocity: event.velocityX, clamp: [0, boundX]});
+      translateY.value = withDecay({ velocity: event.velocityY, clamp: [0, boundY]});
     }
   });
 
