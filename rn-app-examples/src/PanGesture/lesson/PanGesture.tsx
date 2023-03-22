@@ -1,8 +1,8 @@
 import { View, StyleSheet } from "react-native";
 
 import { Card, Cards } from "../../components";
-import { PanGestureHandler } from "react-native-gesture-handler";
-import Animated, {useAnimatedGestureHandler, useAnimatedStyle, useSharedValue} from "react-native-reanimated";
+import { PanGestureHandler, PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
+import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
   container: {
@@ -19,10 +19,20 @@ export const PanGesture = () => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
-  const onGestureEvent = useAnimatedGestureHandler({
-    onActive: (event, _) => {
-      translateX.value = event.translationX;
-      translateY.value = event.translationY;
+  const onGestureEvent = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    {
+      offsetX: number;
+      offsetY: number;
+    }
+    >({
+    onStart: (_, context) => {
+      context.offsetX = translateX.value;
+      context.offsetY = translateY.value;
+    },
+    onActive: (event, context) => {
+      translateX.value = context.offsetX + event.translationX;
+      translateY.value = context.offsetY + event.translationY;
     }
   });
 
