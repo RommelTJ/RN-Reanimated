@@ -4,7 +4,6 @@ import {
   useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
 
 import { Button, StyleGuide, cards } from "../../components";
@@ -19,18 +18,19 @@ const styles = StyleSheet.create({
   },
 });
 
+const useSpring = (state: boolean) => {
+  const value = useSharedValue(0);
+  useEffect(() => {
+    value.value = state ? 1 : 0;
+  }, [state, value]);
+  return useDerivedValue(() => {
+    return withSpring(value.value);
+  });
+};
+
 export const Transitions = () => {
   const [toggled, setToggle] = useState(false);
-  const isToggled = useSharedValue(0);
-
-  useEffect(() => {
-    isToggled.value = toggled ? 1 : 0;
-  }, [toggled, isToggled]);
-
-  const transition = useDerivedValue(() => {
-    // return withSpring(isToggled.value);
-    return withTiming(isToggled.value);
-  });
+  const transition = useSpring(toggled);
 
   return (
     <View style={styles.container}>
