@@ -4,6 +4,7 @@ import {
   useDerivedValue,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 import { Button, StyleGuide, cards } from "../../components";
@@ -27,7 +28,8 @@ export const Transitions = () => {
   }, [toggled, isToggled]);
 
   const transition = useDerivedValue(() => {
-    return withSpring(isToggled.value);
+    // return withSpring(isToggled.value);
+    return withTiming(isToggled.value);
   });
 
   return (
