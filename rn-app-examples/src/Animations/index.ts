@@ -1,1 +1,1 @@
-export { Animations } from "./Animations";
+export { Animations } from "./lesson/Animations";
