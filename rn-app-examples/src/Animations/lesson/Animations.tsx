@@ -5,7 +5,7 @@ import React, {
 import { StyleSheet, View } from "react-native";
 import {
   withTiming,
-  // withRepeat,
+  withRepeat,
   useSharedValue,
   // Easing,
 } from "react-native-reanimated";
@@ -43,7 +43,7 @@ export const Animations = () => {
         onPress={() => {
           setPlay((prev) => !prev);
           if (progress.value === null) {
-            progress.value = withTiming(1);
+            progress.value = withRepeat(withTiming(1), -1, true);
           }
         }}
       />
