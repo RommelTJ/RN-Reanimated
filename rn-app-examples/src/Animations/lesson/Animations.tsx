@@ -4,7 +4,7 @@ import React, {
 } from "react";
 import { StyleSheet, View } from "react-native";
 import {
-  // withTiming,
+  withTiming,
   // withRepeat,
   useSharedValue,
   // Easing,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 export const Animations = () => {
   const [play, setPlay] = useState(false);
-  const progress = useSharedValue(0);
+  const progress = useSharedValue<null | number>(null);
   // const paused = useSharedValue(!play);
   // useEffect(() => {
   //   progress.value = withPause(
@@ -42,6 +42,9 @@ export const Animations = () => {
         primary
         onPress={() => {
           setPlay((prev) => !prev);
+          if (progress.value === null) {
+            progress.value = withTiming(1);
+          }
         }}
       />
     </View>

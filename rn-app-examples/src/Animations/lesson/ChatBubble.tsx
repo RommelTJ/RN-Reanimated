@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 });
 
 interface ChatBubbleProps {
-  progress: Animated.SharedValue<number>;
+  progress: Animated.SharedValue<null | number>;
 }
 
 export const ChatBubble = ({ progress }: ChatBubbleProps) => {

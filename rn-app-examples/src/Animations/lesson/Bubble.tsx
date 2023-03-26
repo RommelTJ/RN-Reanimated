@@ -18,13 +18,14 @@ const styles = StyleSheet.create({
 });
 
 interface BubbleProps {
-  progress: Animated.SharedValue<number>;
+  progress: Animated.SharedValue<null | number>;
   start: number;
   end: number;
 }
 
 export const Bubble = ({ progress, start, end }: BubbleProps) => {
   const style = useAnimatedStyle(() => {
+    if (progress.value === null) return {};
     const opacity = interpolate(
       progress.value,
       [start, end],
