@@ -1,7 +1,4 @@
-import React, {
-  // useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   withTiming,
@@ -9,13 +6,12 @@ import {
   useSharedValue,
   Easing,
 } from "react-native-reanimated";
-// import { withPause } from "react-native-redash";
+import { withPause } from "react-native-redash";
 
 import { Button, StyleGuide } from "../../components";
 
 import { ChatBubble } from "./ChatBubble";
 
-// const easing = Easing.inOut(Easing.ease);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -27,7 +23,7 @@ const styles = StyleSheet.create({
 export const Animations = () => {
   const [play, setPlay] = useState(false);
   const progress = useSharedValue<null | number>(null);
-  // const paused = useSharedValue(!play);
+  const paused = useSharedValue(!play);
   // useEffect(() => {
   //   progress.value = withPause(
   //     withRepeat(withTiming(1, { duration: 1000, easing }), -1, true),
@@ -42,12 +38,16 @@ export const Animations = () => {
         primary
         onPress={() => {
           setPlay((prev) => !prev);
+          paused.value = !paused.value;
           if (progress.value === null) {
             const timingOptions = {
               duration: 1000,
               easing: Easing.inOut(Easing.ease),
             };
-            progress.value = withRepeat(withTiming(1, timingOptions), -1, true);
+            progress.value = withPause(
+              withRepeat(withTiming(1, timingOptions), -1, true),
+              paused
+            );
           }
         }}
       />
