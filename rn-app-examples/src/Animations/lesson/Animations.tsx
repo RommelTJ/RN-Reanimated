@@ -7,7 +7,7 @@ import {
   withTiming,
   withRepeat,
   useSharedValue,
-  // Easing,
+  Easing,
 } from "react-native-reanimated";
 // import { withPause } from "react-native-redash";
 
@@ -43,7 +43,11 @@ export const Animations = () => {
         onPress={() => {
           setPlay((prev) => !prev);
           if (progress.value === null) {
-            progress.value = withRepeat(withTiming(1), -1, true);
+            const timingOptions = {
+              duration: 1000,
+              easing: Easing.inOut(Easing.ease),
+            };
+            progress.value = withRepeat(withTiming(1, timingOptions), -1, true);
           }
         }}
       />
