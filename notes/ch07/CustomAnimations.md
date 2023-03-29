@@ -10,3 +10,5 @@
   * `start(...) => void`
     * The starting point of the animation.
 * See: `rn-app-examples/src/Animations`
+* Course goes over creating withDecay animation from scratch using a worklet.
+  * Goes from 6:37 to 16:50
