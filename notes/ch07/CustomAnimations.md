@@ -14,3 +14,5 @@
   * Goes from 6:37 to 16:50
 * Course goes over creating withBounce animation from scratch using a worklet.
   * Goes from 16:50 to 25:30
+* Course goes over creating withPause animation from scratch using a worklet.
+  * Goes from 25:30 to 32:30
