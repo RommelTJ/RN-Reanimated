@@ -38,7 +38,10 @@ export const Cursor = ({ r, strokeWidth, theta }: CursorProps) => {
       const { translationX, translationY } = event;
       const x = ctx.offset.x + translationX;
       const y = ctx.offset.y + translationY;
-      theta.value = canvas2Polar({ x, y }, center).theta;
+      const value = canvas2Polar({ x, y }, center).theta;
+      theta.value = value > 0 ? value : 2 * Math.PI + value;
+      console.log("before: ", value);
+      console.log("after: ", theta.value);
     },
   });
   return (
