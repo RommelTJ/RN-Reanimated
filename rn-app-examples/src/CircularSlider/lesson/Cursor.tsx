@@ -31,12 +31,14 @@ export const Cursor = ({ r, strokeWidth, theta }: CursorProps) => {
     };
   });
   const onGestureEvent = useAnimatedGestureHandler({
+    onStart: (event, ctx) => {
+      ctx.offset = polar2Canvas({ theta: theta.value, radius: r }, center);
+    },
     onActive: (event, ctx) => {
       const { translationX, translationY } = event;
-      theta.value = canvas2Polar(
-        { x: translationX, y: translationY },
-        center
-      ).theta;
+      const x = ctx.offset.x + translationX;
+      const y = ctx.offset.y + translationY;
+      theta.value = canvas2Polar({ x, y }, center).theta;
     },
   });
   return (
