@@ -47,7 +47,7 @@ export const Cursor = ({ r, strokeWidth, theta }: CursorProps) => {
     onActive: (event, ctx) => {
       const { translationX, translationY } = event;
       const x = ctx.offset.x + translationX;
-      const y1 = ctx.offset.y + event.translationY;
+      const y1 = ctx.offset.y + translationY;
       let y: number;
       if (x < r) {
         y = y1;
