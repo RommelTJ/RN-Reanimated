@@ -11,6 +11,7 @@ import Animated, {
   SharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
+  withDecay,
 } from "react-native-reanimated";
 import { DataPoint } from "./Label";
 
@@ -62,6 +63,12 @@ export const Cursor = ({ path, length, point }: CursorProps) => {
         [0, path.length],
         Extrapolation.CLAMP
       );
+    },
+    onEnd: (event, ctx) => {
+      length.value = withDecay({
+        velocity: event.velocityX,
+        clamp: [0, path.length],
+      });
     },
   });
   const style = useAnimatedStyle(() => {
