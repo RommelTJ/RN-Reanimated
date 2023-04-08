@@ -15,8 +15,6 @@ const styles = StyleSheet.create({
   },
 });
 
-console.log({ styles });
-
 export interface DataPoint {
   coord: {
     x: number;
