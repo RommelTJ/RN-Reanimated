@@ -63,12 +63,15 @@ const styles = StyleSheet.create({
 export const Graph = () => {
   const length = useSharedValue(0);
   const point = useDerivedValue(() => {
-    const coords = getPointAtLength(path, length.value);
+    const p = getPointAtLength(path, length.value);
     return {
-      coords,
+      coord: {
+        x: p.x,
+        y: p.y,
+      },
       data: {
-        x: scaleInvert(coords.x, domain.x, range.x),
-        y: scaleInvert(coords.y, domain.y, range.y),
+        x: scaleInvert(p.x, domain.x, range.x),
+        y: scaleInvert(p.y, domain.y, range.y),
       },
     };
   });
@@ -95,7 +98,7 @@ export const Graph = () => {
             fill="url(#gradient)"
           />
         </Svg>
-        <Cursor {...{ path }} />
+        <Cursor path={path} length={length} point={point} />
       </View>
     </View>
   );
