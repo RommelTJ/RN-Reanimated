@@ -3,6 +3,8 @@
 import { View, StyleSheet } from "react-native";
 
 import { StyleGuide } from "../../components";
+import { ReText, round } from "react-native-redash";
+import Animated, { useDerivedValue } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
   date: {
@@ -27,9 +29,27 @@ export interface DataPoint {
 }
 
 interface LabelProps {
-  point: DataPoint;
+  point: Animated.SharedValue<DataPoint>;
 }
 
-export const Label = ({}: LabelProps) => {
-  return <View />;
+export const Label = ({ point }: LabelProps) => {
+  const date = useDerivedValue(() => {
+    return new Date(point.value.data.x).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  });
+  const price = useDerivedValue(() => {
+    const p = point.value.data.y;
+    return `$ ${round(p, 2).toLocaleString("en-US", { currency: "USD" })}`;
+  });
+
+  return (
+    <View>
+      <ReText text={date} style={styles.date} />
+      <ReText text={price} style={styles.date} />
+    </View>
+  );
 };

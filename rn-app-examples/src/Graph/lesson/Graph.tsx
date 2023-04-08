@@ -77,7 +77,7 @@ export const Graph = () => {
   });
   return (
     <View style={styles.container}>
-      <Label {...{ data, point }} />
+      <Label data={data} point={point} />
       <View>
         <Svg {...{ width, height }}>
           <Defs>
