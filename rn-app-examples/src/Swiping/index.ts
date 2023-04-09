@@ -1,4 +1,4 @@
-export { Swiping, profiles } from "./Swiping";
-import { profiles } from "./Swiping";
+export { Swiping, profiles } from "./lesson/Swiping";
+import { profiles } from "./lesson/Swiping";
 
 export const swipingAssets = profiles.map(({ profile }) => profile);
