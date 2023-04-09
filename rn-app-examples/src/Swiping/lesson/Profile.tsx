@@ -86,18 +86,31 @@ export const Profile = ({ profile, translateX, translateY }: CardProps) => {
       },
     ],
   }));
+  const like = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translateX.value,
+        [0, width / 4],
+        [0, 1],
+        Extrapolate.CLAMP
+      ),
+    };
+  });
+  const nope = useAnimatedStyle(() => {
+    return { opacity: interpolate(translateX.value, [-width / 4, 0], [1, 0]) };
+  });
 
   return (
     <Animated.View style={[StyleSheet.absoluteFill, style]}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
         <View style={styles.header}>
-          <View style={[styles.like]}>
+          <Animated.View style={[styles.like, like]}>
             <Text style={styles.likeLabel}>LIKE</Text>
-          </View>
-          <View style={[styles.nope]}>
+          </Animated.View>
+          <Animated.View style={[styles.nope, nope]}>
             <Text style={styles.nopeLabel}>NOPE</Text>
-          </View>
+          </Animated.View>
         </View>
         <View style={styles.footer}>
           <Text style={styles.name}>{profile.name}</Text>
