@@ -46,7 +46,11 @@ export const Swipeable = ({ profile, onTop, onSwipe }: SwiperProps) => {
       const destination = snapPoint(translateX.value, velocityX, snapPoints);
       translateX.value = withSpring(
         destination,
-        { velocity: velocityX },
+        {
+          velocity: velocityX,
+          restSpeedThreshold: destination == 0 ? 0.01 : 100,
+          restDisplacementThreshold: destination === 0 ? 0.01 : 100,
+        },
         () => {
           // This is the side effect. We are in the UI thread and we call back to the UI thread to do this.
           if (destination !== 0) {
