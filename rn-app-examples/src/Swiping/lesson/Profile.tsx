@@ -1,4 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
 export interface ProfileModel {
   id: string;
@@ -58,11 +62,20 @@ const styles = StyleSheet.create({
 interface CardProps {
   profile: ProfileModel;
   onTop: boolean;
+  translateX: SharedValue<number>;
+  translateY: SharedValue<number>;
 }
 
-export const Profile = ({ profile }: CardProps) => {
+export const Profile = ({ profile, translateX, translateY }: CardProps) => {
+  const style = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+    ],
+  }));
+
   return (
-    <View style={[StyleSheet.absoluteFill]}>
+    <Animated.View style={[StyleSheet.absoluteFill, style]}>
       <Image style={styles.image} source={profile.profile} />
       <View style={styles.overlay}>
         <View style={styles.header}>
@@ -77,6 +90,6 @@ export const Profile = ({ profile }: CardProps) => {
           <Text style={styles.name}>{profile.name}</Text>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
