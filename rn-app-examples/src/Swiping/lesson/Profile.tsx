@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -11,7 +11,9 @@ export interface ProfileModel {
   profile: number;
 }
 
+const { width, height } = Dimensions.get("window");
 export const α = Math.PI / 12;
+export const A = Math.sin(α) * height + Math.cos(α) * width;
 const styles = StyleSheet.create({
   image: {
     ...StyleSheet.absoluteFillObject,
