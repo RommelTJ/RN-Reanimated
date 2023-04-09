@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
@@ -6,7 +6,7 @@ import { RectButton } from "react-native-gesture-handler";
 import { StyleGuide } from "../../components";
 
 import type { ProfileModel } from "./Profile";
-import { Swipeable } from "./Swipeable";
+import Swipeable, { Swiper } from "./Swipeable";
 import { useSharedValue } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
@@ -50,6 +50,7 @@ interface ProfilesProps {
 }
 
 export const Profiles = ({ profiles: defaultProfiles }: ProfilesProps) => {
+  const topCardRef = useRef<Swiper>(null);
   const scale = useSharedValue(1);
   const [profiles, setProfiles] = useState(defaultProfiles);
   const onSwipe = useCallback(() => {
@@ -64,9 +65,11 @@ export const Profiles = ({ profiles: defaultProfiles }: ProfilesProps) => {
       <View style={styles.cards}>
         {profiles.map((profile, index) => {
           const onTop = index === profiles.length - 1;
+          const ref = onTop ? topCardRef : null;
           return (
             <Swipeable
               key={profile.id}
+              ref={ref}
               profile={profile}
               onSwipe={onSwipe}
               onTop={onTop}
@@ -76,10 +79,16 @@ export const Profiles = ({ profiles: defaultProfiles }: ProfilesProps) => {
         })}
       </View>
       <View style={styles.footer}>
-        <RectButton style={styles.circle}>
+        <RectButton
+          style={styles.circle}
+          onPress={() => topCardRef.current?.swipeLeft()}
+        >
           <Icon name="x" size={32} color="#ec5288" />
         </RectButton>
-        <RectButton style={styles.circle}>
+        <RectButton
+          style={styles.circle}
+          onPress={() => topCardRef.current?.swipeRight()}
+        >
           <Icon name="heart" size={32} color="#6ee3b4" />
         </RectButton>
       </View>

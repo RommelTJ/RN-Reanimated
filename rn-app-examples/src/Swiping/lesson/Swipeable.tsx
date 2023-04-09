@@ -15,8 +15,39 @@ import Animated, {
 } from "react-native-reanimated";
 import { Dimensions, StyleSheet } from "react-native";
 import { snapPoint } from "react-native-redash";
+import { forwardRef, Ref, useImperativeHandle } from "react";
 
 const snapPoints = [-A, 0, A];
+
+const swipe = (
+  translateX: SharedValue<number>,
+  destination: number,
+  velocityX: number,
+  onSwipe: () => void
+) => {
+  "worklet";
+  // Worklet directive allows us to execute this on the UI thread.
+
+  translateX.value = withSpring(
+    destination,
+    {
+      velocity: velocityX,
+      restSpeedThreshold: destination == 0 ? 0.01 : 100,
+      restDisplacementThreshold: destination === 0 ? 0.01 : 100,
+    },
+    () => {
+      // This is the side effect. We are in the UI thread and we call back to the UI thread to do this.
+      if (destination !== 0) {
+        runOnJS(onSwipe)();
+      }
+    }
+  );
+};
+
+export interface Swiper {
+  swipeLeft: () => void;
+  swipeRight: () => void;
+}
 
 type Offset = { x: number; y: number };
 
@@ -29,9 +60,18 @@ interface SwiperProps {
 
 const { width } = Dimensions.get("window");
 
-export const Swipeable = ({ profile, onTop, onSwipe, scale }: SwiperProps) => {
+const Swipeable = (
+  { profile, onTop, onSwipe, scale }: SwiperProps,
+  ref: Ref<Swiper>
+) => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+  useImperativeHandle(ref, () => {
+    return {
+      swipeLeft: () => swipe(translateX, -A, 25, onSwipe),
+      swipeRight: () => swipe(translateX, A, 25, onSwipe),
+    };
+  });
 
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -56,20 +96,7 @@ export const Swipeable = ({ profile, onTop, onSwipe, scale }: SwiperProps) => {
       const { velocityX, velocityY } = event;
       // Calculates the position of X, depending on the velocity, in 200ms, and then takes closest point to snap points.
       const destination = snapPoint(translateX.value, velocityX, snapPoints);
-      translateX.value = withSpring(
-        destination,
-        {
-          velocity: velocityX,
-          restSpeedThreshold: destination == 0 ? 0.01 : 100,
-          restDisplacementThreshold: destination === 0 ? 0.01 : 100,
-        },
-        () => {
-          // This is the side effect. We are in the UI thread and we call back to the UI thread to do this.
-          if (destination !== 0) {
-            runOnJS(onSwipe)();
-          }
-        }
-      );
+      swipe(translateX, destination, velocityX, onSwipe);
       translateY.value = withSpring(0, { velocity: velocityY });
     },
   });
@@ -88,3 +115,5 @@ export const Swipeable = ({ profile, onTop, onSwipe, scale }: SwiperProps) => {
     </PanGestureHandler>
   );
 };
+
+export default forwardRef(Swipeable);
