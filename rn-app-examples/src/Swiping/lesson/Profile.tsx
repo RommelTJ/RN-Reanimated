@@ -1,5 +1,8 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import Animated, {
+  Extrapolate,
+  Extrapolation,
+  interpolate,
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
@@ -73,6 +76,14 @@ export const Profile = ({ profile, translateX, translateY }: CardProps) => {
     transform: [
       { translateX: translateX.value },
       { translateY: translateY.value },
+      {
+        rotate: `${interpolate(
+          translateX.value,
+          [-width / 2, 0, width / 2],
+          [α, 0, -α],
+          Extrapolate.CLAMP
+        )}rad`,
+      },
     ],
   }));
 
