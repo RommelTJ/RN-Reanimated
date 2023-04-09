@@ -5,12 +5,15 @@ import {
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import Animated, {
+  Extrapolation,
+  interpolate,
   runOnJS,
+  SharedValue,
   useAnimatedGestureHandler,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { snapPoint } from "react-native-redash";
 
 const snapPoints = [-A, 0, A];
@@ -21,9 +24,12 @@ interface SwiperProps {
   onSwipe: () => void;
   profile: ProfileModel;
   onTop: boolean;
+  scale: SharedValue<number>;
 }
 
-export const Swipeable = ({ profile, onTop, onSwipe }: SwiperProps) => {
+const { width } = Dimensions.get("window");
+
+export const Swipeable = ({ profile, onTop, onSwipe, scale }: SwiperProps) => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -39,6 +45,12 @@ export const Swipeable = ({ profile, onTop, onSwipe }: SwiperProps) => {
       const { translationX, translationY } = event;
       translateX.value = translationX + context.x;
       translateY.value = translationY + context.y;
+      scale.value = interpolate(
+        translateX.value,
+        [-width / 2, 0, width / 2],
+        [1, 0.95, 1],
+        Extrapolation.CLAMP
+      );
     },
     onEnd: (event, _) => {
       const { velocityX, velocityY } = event;
@@ -70,6 +82,7 @@ export const Swipeable = ({ profile, onTop, onSwipe }: SwiperProps) => {
           onTop={onTop}
           translateX={translateX}
           translateY={translateY}
+          scale={scale}
         />
       </Animated.View>
     </PanGestureHandler>

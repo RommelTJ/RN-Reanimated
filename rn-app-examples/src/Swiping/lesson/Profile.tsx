@@ -1,7 +1,6 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Extrapolate,
-  Extrapolation,
   interpolate,
   SharedValue,
   useAnimatedStyle,
@@ -69,9 +68,15 @@ interface CardProps {
   onTop: boolean;
   translateX: SharedValue<number>;
   translateY: SharedValue<number>;
+  scale: SharedValue<number>;
 }
 
-export const Profile = ({ profile, translateX, translateY }: CardProps) => {
+export const Profile = ({
+  profile,
+  translateX,
+  translateY,
+  scale,
+}: CardProps) => {
   const style = useAnimatedStyle(() => ({
     transform: [
       { translateX: translateX.value },
@@ -84,6 +89,7 @@ export const Profile = ({ profile, translateX, translateY }: CardProps) => {
           Extrapolate.CLAMP
         )}rad`,
       },
+      { scale: scale.value },
     ],
   }));
   const like = useAnimatedStyle(() => {

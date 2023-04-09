@@ -7,6 +7,7 @@ import { StyleGuide } from "../../components";
 
 import type { ProfileModel } from "./Profile";
 import { Swipeable } from "./Swipeable";
+import { useSharedValue } from "react-native-reanimated";
 
 const styles = StyleSheet.create({
   container: {
@@ -49,6 +50,7 @@ interface ProfilesProps {
 }
 
 export const Profiles = ({ profiles: defaultProfiles }: ProfilesProps) => {
+  const scale = useSharedValue(1);
   const [profiles, setProfiles] = useState(defaultProfiles);
   const onSwipe = useCallback(() => {
     setProfiles(profiles.slice(0, profiles.length - 1));
@@ -68,6 +70,7 @@ export const Profiles = ({ profiles: defaultProfiles }: ProfilesProps) => {
               profile={profile}
               onSwipe={onSwipe}
               onTop={onTop}
+              scale={scale}
             />
           );
         })}
