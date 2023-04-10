@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 
 import { Card, Cards, CARD_WIDTH, CARD_HEIGHT } from "../../components";
 
@@ -24,6 +24,10 @@ interface DynamicSpringProps {
 }
 
 export const DynamicSpring = ({ width, height }: DynamicSpringProps) => {
+  const translate = {
+    x: useSharedValue(0),
+    y: useSharedValue(0),
+  };
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.card]}>
@@ -32,7 +36,7 @@ export const DynamicSpring = ({ width, height }: DynamicSpringProps) => {
       <Animated.View style={[styles.card]}>
         <Card card={Cards.Card2} />
       </Animated.View>
-      <DraggableCard {...{ width, height }} />
+      <DraggableCard width={width} height={height} translate={translate} />
     </View>
   );
 };
