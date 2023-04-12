@@ -57,7 +57,7 @@ export const SortableItem = (props: Props) => {
       transform: [
         { translateY: y.value },
         { translateX: x.value },
-        { scale: withSpring(isGestureActive.value ? 1.1 : 1) },
+        { scale: withSpring(isGestureActive.value ? 1.05 : 1) },
       ],
       zIndex: activeCard.value == index ? 100 : 1,
     };
