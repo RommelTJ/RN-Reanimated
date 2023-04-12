@@ -4,6 +4,7 @@ import Animated, {
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
@@ -34,6 +35,10 @@ export const SortableItem = (props: Props) => {
     onActive: (event, context) => {
       x.value = event.translationX;
       y.value = event.translationY + context.offsetY;
+    },
+    onEnd: () => {
+      x.value = withSpring(0);
+      y.value = withSpring(currentOffset.y.value);
     },
   });
 
