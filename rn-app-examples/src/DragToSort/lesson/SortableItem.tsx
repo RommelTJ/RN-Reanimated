@@ -3,8 +3,12 @@ import Animated, {
   SharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 
 type Props = {
   index: number;
@@ -15,7 +19,24 @@ type Props = {
 };
 export const SortableItem = (props: Props) => {
   const { index, offsets, children, width, height } = props;
+
   const currentOffset = offsets[index];
+  const x = useSharedValue(0);
+  const y = useSharedValue(currentOffset.y.value);
+
+  const onGestureEvent = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    { offsetY: number }
+  >({
+    onStart: (_, context) => {
+      context.offsetY = y.value;
+    },
+    onActive: (event, context) => {
+      x.value = event.translationX;
+      y.value = event.translationY + context.offsetY;
+    },
+  });
+
   const style = useAnimatedStyle(() => {
     return {
       position: "absolute",
@@ -23,10 +44,9 @@ export const SortableItem = (props: Props) => {
       left: 0,
       width,
       height,
-      transform: [{ translateY: currentOffset.y.value }],
+      transform: [{ translateY: y.value }, { translateX: x.value }],
     };
   });
-  const onGestureEvent = useAnimatedGestureHandler({});
 
   return (
     <PanGestureHandler onGestureEvent={onGestureEvent}>
