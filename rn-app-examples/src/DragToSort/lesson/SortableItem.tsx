@@ -55,9 +55,9 @@ export const SortableItem = (props: Props) => {
     },
   });
 
-  const translateY = useDerivedValue(() =>
-    isGestureActive.value ? y.value : currentOffset.y.value
-  );
+  const translateY = useDerivedValue(() => {
+    return isGestureActive.value ? y.value : withSpring(currentOffset.y.value);
+  });
   const style = useAnimatedStyle(() => {
     return {
       position: "absolute",
