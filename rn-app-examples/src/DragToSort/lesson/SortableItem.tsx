@@ -3,6 +3,7 @@ import Animated, {
   SharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
@@ -39,6 +40,13 @@ export const SortableItem = (props: Props) => {
     onActive: (event, context) => {
       x.value = event.translationX;
       y.value = event.translationY + context.offsetY;
+      const offsetY = Math.round(y.value / height) * height;
+      offsets.forEach((offset, idx) => {
+        if (offset.y.value == offsetY && index !== idx) {
+          offset.y.value = currentOffset.y.value;
+          currentOffset.y.value = offsetY;
+        }
+      });
     },
     onEnd: () => {
       isGestureActive.value = false;
@@ -47,6 +55,9 @@ export const SortableItem = (props: Props) => {
     },
   });
 
+  const translateY = useDerivedValue(() =>
+    isGestureActive.value ? y.value : currentOffset.y.value
+  );
   const style = useAnimatedStyle(() => {
     return {
       position: "absolute",
@@ -55,7 +66,7 @@ export const SortableItem = (props: Props) => {
       width,
       height,
       transform: [
-        { translateY: y.value },
+        { translateY: translateY.value },
         { translateX: x.value },
         { scale: withSpring(isGestureActive.value ? 1.05 : 1) },
       ],
