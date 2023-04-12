@@ -13,6 +13,7 @@ export const SortableList = ({ children, item }: SortableListProps) => {
   const offsets = children.map((_, idx) => ({
     y: useSharedValue(item.height * idx),
   }));
+  const activeCard = useSharedValue(-1);
   return (
     <ScrollView
       contentContainerStyle={{ height: item.height * children.length }}
@@ -25,6 +26,7 @@ export const SortableList = ({ children, item }: SortableListProps) => {
             offsets={offsets}
             width={item.width}
             height={item.height}
+            activeCard={activeCard}
           >
             {child}
           </SortableItem>

@@ -17,9 +17,10 @@ type Props = {
   children: ReactElement;
   width: number;
   height: number;
+  activeCard: SharedValue<number>;
 };
 export const SortableItem = (props: Props) => {
-  const { index, offsets, children, width, height } = props;
+  const { index, offsets, children, width, height, activeCard } = props;
 
   const currentOffset = offsets[index];
   const x = useSharedValue(0);
@@ -30,6 +31,7 @@ export const SortableItem = (props: Props) => {
     { offsetY: number }
   >({
     onStart: (_, context) => {
+      activeCard.value = index;
       context.offsetY = y.value;
     },
     onActive: (event, context) => {
@@ -50,6 +52,7 @@ export const SortableItem = (props: Props) => {
       width,
       height,
       transform: [{ translateY: y.value }, { translateX: x.value }],
+      zIndex: activeCard.value == index ? 100 : 1,
     };
   });
 
