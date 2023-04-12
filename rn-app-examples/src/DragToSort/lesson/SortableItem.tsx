@@ -25,7 +25,7 @@ export const SortableItem = (props: Props) => {
 
   const currentOffset = offsets[index];
   const x = useSharedValue(0);
-  const y = useSharedValue(currentOffset.y.value);
+  const y = useSharedValue(0);
   const isGestureActive = useSharedValue(false);
 
   const onGestureEvent = useAnimatedGestureHandler<
@@ -35,7 +35,7 @@ export const SortableItem = (props: Props) => {
     onStart: (_, context) => {
       activeCard.value = index;
       isGestureActive.value = true;
-      context.offsetY = y.value;
+      context.offsetY = currentOffset.y.value;
     },
     onActive: (event, context) => {
       x.value = event.translationX;
