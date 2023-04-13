@@ -8,6 +8,7 @@ import {
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
 import { onGestureEvent } from "react-native-redash/lib/typescript/v1";
+import { clamp } from "react-native-redash";
 
 export const CONTROL_POINT_RADIUS = 20;
 
@@ -20,7 +21,7 @@ interface ControlPointProps {
   max: number;
 }
 
-export const ControlPoint = ({ x, y }: ControlPointProps) => {
+export const ControlPoint = ({ x, y, min, max }: ControlPointProps) => {
   const onGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     Offset
@@ -31,8 +32,8 @@ export const ControlPoint = ({ x, y }: ControlPointProps) => {
     },
     onActive: (event, context) => {
       const { translationY, translationX } = event;
-      x.value = context.x + translationX;
-      y.value = context.y + translationY;
+      x.value = clamp(context.x + translationX, min, max);
+      y.value = clamp(context.y + translationY, min, max);
     },
     onEnd: (event, context) => {},
   });
