@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedProps,
   useSharedValue,
 } from "react-native-reanimated";
+import { addCurve, createPath, serialize } from "react-native-redash";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedLine = Animated.createAnimatedComponent(Line);
@@ -42,9 +43,19 @@ export const Bezier = () => {
   const c1y = useSharedValue(min);
   const c2x = useSharedValue(max);
   const c2y = useSharedValue(max);
+
   const path = useAnimatedProps(() => {
+    // Same path as below, but using redash.
+    const curve = createPath({ x: start.x, y: start.y });
+    addCurve(curve, {
+      c1: { x: c1x.value, y: c1y.value },
+      c2: { x: c2x.value, y: c2y.value },
+      to: { x: end.x, y: end.y },
+    });
+
     return {
-      d: `M ${start.x} ${start.y} C ${c1x.value} ${c1y.value}, ${c2x.value} ${c2y.value}, ${end.x} ${end.y}`,
+      // d: `M ${start.x} ${start.y} C ${c1x.value} ${c1y.value}, ${c2x.value} ${c2y.value}, ${end.x} ${end.y}`,
+      d: serialize(curve),
     };
   });
   const line1 = useAnimatedProps(() => {
