@@ -7,7 +7,6 @@ import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
-import { onGestureEvent } from "react-native-redash/lib/typescript/v1";
 import { clamp } from "react-native-redash";
 
 export const CONTROL_POINT_RADIUS = 20;
@@ -35,7 +34,6 @@ export const ControlPoint = ({ x, y, min, max }: ControlPointProps) => {
       x.value = clamp(context.x + translationX, min, max);
       y.value = clamp(context.y + translationY, min, max);
     },
-    onEnd: (event, context) => {},
   });
 
   const style = useAnimatedStyle(() => {
