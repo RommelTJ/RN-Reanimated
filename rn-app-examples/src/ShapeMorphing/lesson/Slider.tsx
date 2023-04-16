@@ -8,6 +8,7 @@ import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
+import { clamp } from "react-native-redash";
 
 const { width } = Dimensions.get("window");
 const CURSOR_SIZE = 40;
@@ -61,7 +62,7 @@ export const Slider = (props: Props) => {
     },
     onActive: (event, context) => {
       const { translationX } = event;
-      translateX.value = translationX + context.x;
+      translateX.value = clamp(translationX + context.x, 0, SLIDER_WIDTH);
     },
   });
 
