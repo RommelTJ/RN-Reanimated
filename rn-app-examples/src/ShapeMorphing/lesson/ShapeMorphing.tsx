@@ -2,7 +2,8 @@ import { StyleSheet, View } from "react-native";
 
 import { Eye } from "./Eye";
 import { Mouth } from "./Mouth";
-import { Slider } from "./Slider";
+import { Slider, SLIDER_WIDTH } from "./Slider";
+import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 
 const bad = "#FDBEEB";
 //const normal = "#FDEEBE";
@@ -29,17 +30,21 @@ const styles = StyleSheet.create({
 });
 
 export const ShapeMorphing = () => {
-  const progress = 0.5;
+  const translateX = useSharedValue(0);
+  const progress = useDerivedValue(() => {
+    return translateX.value / SLIDER_WIDTH;
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.face}>
         <View style={styles.eyes}>
-          <Eye progress={progress} />
-          <Eye flip progress={progress} />
+          <Eye progress={progress.value} />
+          <Eye flip progress={progress.value} />
         </View>
-        <Mouth progress={progress} />
+        <Mouth progress={progress.value} />
       </View>
-      <Slider />
+      <Slider translateX={translateX} />
     </View>
   );
 };
