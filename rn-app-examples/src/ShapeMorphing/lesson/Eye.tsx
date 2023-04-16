@@ -5,7 +5,6 @@ import {
   close,
   createPath,
   interpolatePath,
-  serialize,
 } from "react-native-redash";
 import Animated, {
   SharedValue,
