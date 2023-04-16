@@ -56,7 +56,7 @@ export const ShapeMorphing = () => {
           <Eye progress={progress.value} />
           <Eye flip progress={progress.value} />
         </View>
-        <Mouth progress={progress.value} />
+        <Mouth progress={progress} />
       </View>
       <Slider translateX={translateX} />
     </Animated.View>
