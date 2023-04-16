@@ -1,1 +1,1 @@
-export { ShapeMorphing } from "./ShapeMorphing";
+export { ShapeMorphing } from "./lesson/ShapeMorphing";
