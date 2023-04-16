@@ -1,11 +1,23 @@
 import { StyleSheet, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
-import { addCurve, close, createPath, serialize } from "react-native-redash";
+import {
+  addCurve,
+  close,
+  createPath,
+  interpolatePath,
+  serialize,
+} from "react-native-redash";
+import Animated, {
+  SharedValue,
+  useAnimatedProps,
+} from "react-native-reanimated";
 
 interface EyeProps {
-  progress: number;
+  progress: SharedValue<number>;
   flip?: boolean;
 }
+
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const angryPath = createPath({ x: 16, y: 25 });
 addCurve(angryPath, {
@@ -91,13 +103,26 @@ addCurve(goodPath, {
 });
 close(goodPath);
 
-export const Eye = ({ flip }: EyeProps) => {
-  const d = serialize(angryPath);
+export const Eye = ({ flip, progress }: EyeProps) => {
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      d: interpolatePath(
+        progress.value,
+        [0, 0.5, 1],
+        [angryPath, normalPath, goodPath]
+      ),
+    };
+  });
   const rotateY = flip ? "180deg" : "0deg";
   return (
     <View style={{ transform: [{ rotateY }] }}>
       <Svg width={90} height={70} viewBox="0 0 98 78">
-        <Path fill="white" stroke="black" strokeWidth="4" d={d} />
+        <AnimatedPath
+          animatedProps={animatedProps}
+          fill="white"
+          stroke="black"
+          strokeWidth="4"
+        />
       </Svg>
       <View
         style={{

@@ -53,8 +53,8 @@ export const ShapeMorphing = () => {
     <Animated.View style={[styles.container, containerStyle]}>
       <View style={styles.face}>
         <View style={styles.eyes}>
-          <Eye progress={progress.value} />
-          <Eye flip progress={progress.value} />
+          <Eye progress={progress} />
+          <Eye flip progress={progress} />
         </View>
         <Mouth progress={progress} />
       </View>
